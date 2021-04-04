@@ -38,6 +38,19 @@ SELECT AVG(TIMESTAMPDIFF(YEAR, birthday_at, NOW())) AS average_age FROM users;
  
 -- Данные подготовлены в предыдущем задании
 
+/*
+ *  Выводим количество дней рождений пользователей,
+ *  приходящихся на каждый день недели в текущем году
+*/ 
+
+SELECT
+	count(*),
+	DAYNAME(CONCAT(YEAR(now()), '-', DATE_FORMAT(birthday_at, '%m-%d'))) AS day_of_week
+FROM
+	users
+GROUP BY
+	day_of_week;
+
 /* Задание # 3.
  * (по желанию) Подсчитайте произведение чисел в столбце таблицы.
 */
