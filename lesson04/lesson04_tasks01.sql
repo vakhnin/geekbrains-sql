@@ -11,7 +11,6 @@
  * mysqldump vk --no-data > vk-empty.sql
  */
 
--- CHECK CONSTRAINTS
 USE vk;
 
 -- совершенствуем таблицу дружбы

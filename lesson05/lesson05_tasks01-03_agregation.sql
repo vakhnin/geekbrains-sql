@@ -42,7 +42,6 @@ SELECT AVG(TIMESTAMPDIFF(YEAR, birthday_at, NOW())) AS average_age FROM users;
  *  Выводим количество дней рождений пользователей,
  *  приходящихся на каждый день недели в текущем году
 */ 
-
 SELECT
 	count(*),
 	DAYNAME(CONCAT(YEAR(now()), '-', DATE_FORMAT(birthday_at, '%m-%d'))) AS day_of_week
