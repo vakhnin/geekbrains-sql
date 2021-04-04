@@ -160,7 +160,8 @@ VALUES
   ('Сергей', '1988-02-14'),
   ('Иван', '1998-01-12'),
   ('Мария', '2006-08-29');
- 
+
+-- Выводим пользоватлей, родившихся в мае и августе 
 SELECT
 	name,
 	DATE_FORMAT(birthday_at, '%M') AS birthday_month
@@ -170,5 +171,35 @@ WHERE
 	DATE_FORMAT(birthday_at, '%M') IN ('May', 'August');
 
 
+/* Задание # 5.
+ * (по желанию) Из таблицы catalogs извлекаются записи при помощи запроса. 
+ * SELECT * FROM catalogs WHERE id IN (5, 1, 2); 
+ * Отсортируйте записи в порядке, заданном в списке IN.
+ */
+
+
+/* «Операторы, фильтрация, сортировка и ограничение». Для задания 5. */
+-- Подготавливаем БД для задания (из фала hw-5-data.sql)
+DROP TABLE IF EXISTS catalogs;
+CREATE TABLE catalogs (
+  id SERIAL PRIMARY KEY,
+  name VARCHAR(255) COMMENT 'Название раздела',
+  UNIQUE unique_name(name(10))
+) COMMENT = 'Разделы интернет-магазина';
+
+INSERT INTO catalogs VALUES
+  (NULL, 'Процессоры'),
+  (NULL, 'Материнские платы'),
+  (NULL, 'Видеокарты'),
+  (NULL, 'Жесткие диски'),
+  (NULL, 'Оперативная память');
+ 
+-- выводим категории в указанном порядке
+SELECT * FROM catalogs WHERE id IN (5, 1, 2) 
+ORDER BY CASE
+    WHEN id = 5 THEN 0
+    WHEN id = 1 THEN 1
+    WHEN id = 2 THEN 2
+END;
 
 
