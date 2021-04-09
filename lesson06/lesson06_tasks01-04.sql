@@ -47,5 +47,18 @@ SELECT count(*) FROM posts_likes
 WHERE post_id IN 
 	(SELECT id FROM posts WHERE user_id IN 
 		(SELECT user_id FROM profiles WHERE TIMESTAMPDIFF(YEAR, birthday , NOW()) < 18)) 
-	AND like_type
+	AND like_type=1;
 
+
+/* Задание # 3.
+ * Определить, кто больше поставил лайков (всего) - мужчины или женщины?
+ */	
+SELECT  IF (
+        SUM(CASE WHEN gender = 'm' THEN 1 ELSE 0 END)
+        >  SUM(CASE WHEN gender = 'f' THEN 1 ELSE 0 END),
+        'male did more likes',
+        'female did more likes') AS who_did_more_likes
+FROM    profiles, posts_likes WHERE profiles.user_id=posts_likes.user_id
+
+
+	
