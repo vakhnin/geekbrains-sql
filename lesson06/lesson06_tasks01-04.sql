@@ -58,7 +58,29 @@ SELECT  IF (
         >  SUM(CASE WHEN gender = 'f' THEN 1 ELSE 0 END),
         'male did more likes',
         'female did more likes') AS who_did_more_likes
-FROM    profiles, posts_likes WHERE profiles.user_id=posts_likes.user_id
+FROM    profiles, posts_likes WHERE profiles.user_id=posts_likes.user_id;
 
-
-	
+/* Задание # 4.
+ *  (по желанию) Найти пользователя, 
+ * который проявляет наименьшую активность в использовании социальной сети 
+ * (тот, кто написал меньше всего сообщений, отправил меньше всего заявок в друзья, ...)
+ */
+SELECT (SELECT
+		concat(first_name, ' ', last_name)
+	FROM
+		users u
+	WHERE
+		id = uid) AS less_active_user
+FROM 
+	(SELECT admin_id AS uid FROM communities
+	UNION ALL
+	SELECT user_id AS uid FROM communities_users
+	UNION ALL
+	SELECT from_user_id AS uid FROM friend_requests
+	UNION ALL
+	SELECT from_user_id AS uid FROM messages
+	UNION ALL
+	SELECT user_id AS uid FROM posts
+	UNION ALL
+	SELECT user_id AS uid FROM posts_likes) AS t
+GROUP BY uid ORDER BY count(*) LIMIT 1;
