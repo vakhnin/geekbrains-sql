@@ -47,13 +47,12 @@ SELECT * FROM view_product_catalog;
 -- Подготовка данных
 DROP TABLE IF EXISTS dates;
 CREATE TABLE IF NOT EXISTS dates (
-  id SERIAL PRIMARY KEY,
   created_at date);
 INSERT INTO dates VALUES
-	(NULL, '2018-08-01'), 
-	(NULL, '2018-08-04'),
-	(NULL, '2018-08-16'),
-	(NULL, '2018-08-17');
+	('2018-08-01'), 
+	('2018-08-04'),
+	('2018-08-16'),
+	('2018-08-17');
 
 DROP TABLE IF EXISTS august_days;
 CREATE TEMPORARY TABLE IF NOT EXISTS august_days (days int);
@@ -63,12 +62,46 @@ INSERT INTO august_days
 		(11), (12),(13),(14), (15), (16), (17), (18), (19), (20),
 		(21), (22), (23), (24), (25), (26), (27), (28), (29), (30), (31);
 
--- Формируем таблицу
+-- Формируем запрос
 SELECT 
 INTERVAL a.days DAY + '2018-07-31' AS 'date', 
 IF((INTERVAL a.days DAY + '2018-07-31') IN 
 (SELECT created_at FROM dates d2),1,0) AS in_dates
 FROM august_days a;
 
+/* Задание # 4.
+ * (по желанию) Пусть имеется любая таблица с календарным полем created_at. 
+ * Создайте запрос, который удаляет устаревшие записи из таблицы, 
+ * оставляя только 5 самых свежих записей.
+*/
+
+-- Подготовка данных
+DROP TABLE IF EXISTS august_days;
+CREATE TEMPORARY TABLE IF NOT EXISTS august_days (days int);
+INSERT INTO august_days 
+	VALUES 
+		(1), (2), (3), (4), (5), (6), (7), (8), (9), (10),
+		(11), (12),(13),(14), (15), (16), (17), (18), (19), (20),
+		(21), (22), (23), (24), (25), (26), (27), (28), (29), (30), (31);
+
+DROP TEMPORARY TABLE IF EXISTS dates;
+CREATE TABLE IF NOT EXISTS dates (
+  created_at date);
+INSERT INTO dates 
+	SELECT 
+		INTERVAL a.days DAY + '2018-07-31' AS 'date' 
+	FROM august_days a;
+
+-- Удаление
+DELETE FROM dates d
+WHERE d.created_at NOT IN 
+	(SELECT * FROM 
+		(SELECT d.created_at FROM dates d
+		ORDER BY d.created_at DESC 
+		LIMIT 5) 
+	AS tmp);
+
+-- Проверяем
+SELECT * FROM dates d 
 
 
