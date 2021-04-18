@@ -14,7 +14,7 @@ USE shop;
 DELIMITER //
 
 /* Для правильной работы необходимо включать в промежуток одну из границ.
- * Поэтому реализовал через IF, для большей наглядности 
+ * Поэтому реализовал через IF с условиями, для большей наглядности 
  */
 DROP FUNCTION IF EXISTS hello//
 CREATE FUNCTION hello()
@@ -69,3 +69,42 @@ VALUES ('Intel Core i3-8100', NULL, 7000, 1);
 -- Вставка успешна
 INSERT INTO products (name, desсription, price, catalog_id)
 VALUES (NULL, 'Not NULL description', 7000, 2);
+
+
+
+/* Задание # 3.
+ * (по желанию) Напишите хранимую функцию для вычисления произвольного числа Фибоначчи. 
+ * Числами Фибоначчи называется последовательность в которой число равно сумме двух предыдущих чисел. 
+ * Вызов функции FIBONACCI(10) должен возвращать число 55.
+*/
+
+DELIMITER //
+DROP FUNCTION IF EXISTS fibonacci//
+CREATE FUNCTION fibonacci(n int)
+RETURNS int DETERMINISTIC
+BEGIN
+	DECLARE fib_last_1 INT DEFAULT 0;
+	DECLARE fib_last_2 INT DEFAULT 1;
+	DECLARE fib_new INT;
+	IF (n = 0) THEN 
+		RETURN 0;
+	ELSEIF (n = 1) THEN 
+		RETURN 1;
+	ELSE 
+		WHILE n > 1 DO
+			SET fib_new = fib_last_1 + fib_last_2;
+			SET fib_last_1 = fib_last_2;
+			SET fib_last_2 = fib_new;
+		    SET n = n - 1;
+		END WHILE;
+		RETURN fib_new;	
+	END IF;
+END//
+
+DELIMITER ;
+
+-- Проверяем
+SELECT fibonacci(1);
+SELECT fibonacci(4);
+SELECT fibonacci(7);
+SELECT fibonacci(10);
