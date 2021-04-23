@@ -63,3 +63,29 @@ VALUES
  
  -- Проверяем
  SELECT * FROM logs l ;
+
+
+/* Задание # 2.
+ * (по желанию) Создайте SQL-запрос, который помещает в таблицу users миллион записей.
+*/
+
+-- Создаем процедуру
+delimiter //
+DROP PROCEDURE IF EXISTS insert_one_million_users//
+CREATE PROCEDURE insert_one_million_users ()
+BEGIN
+	DECLARE i INT DEFAULT 0;
+	-- Миллион вставок выполняется очень долго, попробуем 1000 вставок
+	WHILE i < 1000 DO
+		INSERT INTO users(name, birthday_at) 
+			VALUES (CONCAT('user_', i), DATE_SUB(CURRENT_DATE(), INTERVAL 20 YEAR));
+		SET i = i + 1;
+	END WHILE;
+END//
+delimiter ;
+
+-- Вызываем
+CALL insert_one_million_users;
+
+-- Проверяем
+SELECT count(*) FROM users u ; 
